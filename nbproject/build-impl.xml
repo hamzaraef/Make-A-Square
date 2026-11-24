@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Small, self-contained Ant targets for the NetBeans Java Application project. -->
+<project name="Make-A-Square-impl" default="jar" basedir="..">
+    <target name="-init">
+        <property file="nbproject/private/private.properties"/>
+        <property file="nbproject/project.properties"/>
+        <property name="application.args" value=""/>
+        <property name="work.dir" location="."/>
+        <property name="javac.includes" value="**/*.java"/>
+        <property name="run.class" value="${main.class}"/>
+    </target>
+
+    <target name="compile" depends="-init" description="Compile all Java sources.">
+        <mkdir dir="${build.classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${build.classes.dir}"
+               release="${javac.source}"
+               encoding="${source.encoding}" debug="${javac.debug}"
+               deprecation="${javac.deprecation}" includeantruntime="false"
+               classpath="${javac.classpath}" includes="${includes}" excludes="${excludes}">
+            <compilerarg line="${javac.compilerargs}"/>
+        </javac>
+    </target>
+
+    <target name="compile-single" depends="-init" description="Compile selected Java sources.">
+        <mkdir dir="${build.classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${build.classes.dir}"
+               release="${javac.source}"
+               encoding="${source.encoding}" debug="${javac.debug}"
+               includeantruntime="false" includes="${javac.includes}"
+               classpath="${build.classes.dir}:${javac.classpath}"/>
+    </target>
+
+    <target name="jar" depends="compile" description="Build the executable JAR.">
+        <mkdir dir="${dist.dir}"/>
+        <jar destfile="${dist.jar}" basedir="${build.classes.dir}"
+             manifest="${manifest.file}" compress="${jar.compress}">
+            <manifest>
+                <attribute name="Main-Class" value="${main.class}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="run" depends="compile" description="Run the console application.">
+        <java classname="${main.class}" fork="true" failonerror="true"
+              dir="${work.dir}" classpath="${run.classpath}">
+            <jvmarg line="${run.jvmargs}"/>
+            <arg line="${application.args}"/>
+        </java>
+    </target>
+
+    <target name="run-single" depends="compile-single" description="Run the selected main class.">
+        <java classname="${run.class}" fork="true" failonerror="true"
+              dir="${work.dir}" classpath="${run.classpath}">
+            <jvmarg line="${run.jvmargs}"/>
+            <arg line="${application.args}"/>
+        </java>
+    </target>
+
+    <target name="javadoc" depends="-init" description="Generate API documentation.">
+        <javadoc sourcepath="${src.dir}" destdir="${dist.javadoc.dir}"
+                 encoding="${source.encoding}" charset="${source.encoding}"
+                 source="${javac.source}" failonerror="true">
+            <fileset dir="${src.dir}" includes="**/*.java"/>
+        </javadoc>
+    </target>
+
+    <target name="clean" depends="-init" description="Remove generated build output.">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+    </target>
+
+    <target name="rebuild" depends="clean,jar" description="Clean and build the executable JAR."/>
+</project>
